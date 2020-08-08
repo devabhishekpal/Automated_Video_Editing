@@ -14,10 +14,10 @@
 typedef struct Clip{
    VideoContext* vid_cntx;
 
-   //Presentation time stamp for original packets to find start and end frames
+   //pts for original packets to find start and end frames
    int64_t orig_start_pts, orig_end_pts;
 
-   //Position of clip in the sequence to be edited. presentation time stamp is first and last packet in clip
+   //Position of clip in the sequence to be edited. pts is first and last packet in clip
    int64_t start_pts, end_pts;
 
    //Used for internal function, clip_read_packet
@@ -57,21 +57,24 @@ void close_clip(Clip* clip);
 int set_clip_bounds(Clip* clip, int64_t start_index, int64_t end_index);
 
 //Initialize clip object with start and end point
-//This used presentation time stamp instead of frames to set bounds
+//This uses pts instead of frames to set bounds
 int set_clip_bounds_pts(Clip* clip, int64_t orig_start_pts, int64_t orig_end_pts);
 
 int set_clip_start_frame(Clip* clip, int64_t frame_index);
 
-int set_clip_start(Clip* clip, int64_t pts); //Use presentation time stamp
+int set_clip_start(Clip* clip, int64_t pts); //Use pts
 
 int set_clip_end_frame(Clip* clip, int64_t frame_index);
 
-int set_clip_end(Clip* clip, int64_t pts); //Use presentation time stamp instead of frame index
+int set_clip_end(Clip* clip, int64_t pts); //Use pts instead of frame index
 
 //Seek to clip frame relative to clip
 int seek_clip(Clip* clip, int64_t seekframe_index);
 
-//Seek to clip frame relative to clip using presentation time stamp
+//Seek to clip frame relative to clip using pts
 int seek_clip_pts(Clip* clip, int64_t pts);
+
+//Get absolute pts from VideoContext into a pts relative to the Clip bounds
+
 
 #endif

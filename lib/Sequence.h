@@ -59,20 +59,20 @@ void seq_append_clip(Sequence* seq, Clip* clip);
 //Insert clip in sorted manner:
 //Each clip is sorted in accordance to
 //Date and time of file
-//Original start presentation time stamp of clip
+//Original start pts of clip
 //Generates the sequence points for the clip
 int seq_insert_clip_sorted(Sequence* seq, Clip* clip);
 
-//Shift sequence presentation time stamp to next node
+//Shift sequence pts to next node
 int shift_clips_aftr(Sequence* seq, Clip* clip);
 
 //Delete a clip from a sequence and move all following clips forward (Ripple Delete)
 int sequence_ripple_del_clip(Sequence* seq, Clip* clip);
 
-//Convert sequence frame number to presentation time stamp
+//Convert sequence frame number to pts
 int64_t seq_frame_indx_pts(Sequence* seq, int frame_indx);
 
-//Convert presentation timestamp to frame index in sequence
+//Convert pts to frame index in sequence
 int seq_pts_to_frame_indx(Sequence* seq, int64_t pts);
 
 //Cut a clip within a sequence so that it splits into two
@@ -95,11 +95,11 @@ int sequence_seek(Sequence* seq, int frame_indx);
 //close_clips when assigned true will ensure each clip is closed after its read cycle ends (and reopened if read again)
 int sequence_read_packet(Sequence* seq, AVPacket* pkt, bool close_clips_flag);
 
-//Sets start presentation time stamp of a clip in sequence
+//Sets start pts of a clip in sequence
 int move_clip(Sequence* seq, Clip* clip, int start_frame_indx);
 
-//Sets presentation time stamp of a clip in sequence
-//This is based of the start presentation time stamp unlike the start frame in above method
+//Sets pts of a clip in sequence
+//This is based of the start pts unlike the start frame in above method
 void move_clip_pts(Sequence* seq, Clip* clip, int64_t start_pts);
 
 //Get current clip from sequence
