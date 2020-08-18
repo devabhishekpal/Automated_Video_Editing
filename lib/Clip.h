@@ -74,7 +74,79 @@ int seek_clip(Clip* clip, int64_t seekframe_index);
 //Seek to clip frame relative to clip using pts
 int seek_clip_pts(Clip* clip, int64_t pts);
 
-//Get absolute pts from VideoContext into a pts relative to the Clip bounds
+//Get absolute pts for clip i.e the pts of original Video File
+int64_t get_abs_clip_pts(Clip* clip, int64_t relative_pts);
 
+//Convert absolute pts from VideoContext into a pts relative to clip bounds
+int64_t cov_clip_pts_relative(Clip* clip, int64_t abs_pts);
+
+//Convert raw video packet timestamp into clip relative audio pts
+int64_t clip_ts_audio(Clip* clip, int64_t pkt_ts);
+
+//Get index of last frame in clip
+int64_t get_clip_end_frame_index(Clip* clip);
+
+//Determine if VideoContext is out of clip bounds
+//This case means that the VideoContext was used by another clip and needs to be reset on the current clip with seek_clip_pts(clip, 0)
+bool is_vc_outof_bounds(Clip* clip);
+
+//Detects if we are done reading the current packet stream
+bool done_read_curr_pkt_stream(Clip* clip, AVPacket* pkt);
+
+//Reads a single AVPacket from clip
+int clip_read_packet(Clip* clip, AVPacket* pkt);
+
+//Reset all internal flags and packet couter to allow another read cycle
+int reset_packet_counter(Clip* clip);
+
+//Set internal variables used to read stream data
+void init_internal_vars(Clip* clip);
+
+//Compare two clips based on pts
+int64_t compare_clips(Clip* first, Clip* second);
+
+//Compare clips by:
+//First using date and time
+//Then by original start pts
+int64_t compare_clips_sequential(Clip* first, Clip* second);
+
+//Get timebase of clip video stream
+AVRational get_clip_video_timebase(Clip* clip);
+
+//Get timebase of clip audio stream
+AVRational get_clip_audio_timebase(Clip* clip);
+
+//Get video stream from clip
+AVStream* get_clip_video_stream(Clip* clip);
+
+//Get audio stream from clip
+AVStream* get_clip_audio_stream(Clip* clip);
+
+//Get codec params of clip video stream
+AVCodecParameters* get_clip_video_param(Clip* clip);
+
+//Get codec params of clip audio stream
+AVCodecParameters* get_clip_audio_param(Clip* clip);
+
+//Cut a clip
+//oc ---> Original Clip to be cut
+//sc ---> newly created clip with set bounds
+int cut_clip_internal(Clip* oc, int64_t pts, Clip** sc);
+
+//Free clip data and allocated space
+void free_clip(Clip** clip);
+
+//Get data about clip as a string
+char* list_print_clip(void* toBePrinted);
+
+//Free clip memory and all its data if it was allocated on heap
+void list_delete_clip(void* toBeDeleted);
+
+//Compare two clips within a linked list
+int list_compare_clips(const void* first, const void* second);
+
+//Compare two clips in a linked list by date and time then by original start pts
+//Orders clips by time they were shot
+int list_compare_clips_sequential(const void* first, const void* second);
 
 #endif
